@@ -9,8 +9,8 @@
 */
 
 function error( $errNum , $msg ) {
-	fwrite(STDERR, $msg . "\n");
-	exit($errNum);
-	}
+    fwrite(STDERR, $msg . "\n");
+    exit($errNum);
+}
 
 ?>
