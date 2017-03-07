@@ -11,6 +11,7 @@
 require 'src/Arguments.php';
 require 'src/Error.php';
 
+
 function printHelp() {
     echo ( "\033[93m                              Syntax Highlighting\n\033[0m" );
     echo ( "Basic program made for simple text highlighting, adding HTML tags to the input \nfile. " );
@@ -26,25 +27,6 @@ function printHelp() {
     echo ( "     \e[1m--input=filename \e[0m      Input file in UTF-8. If missing, stdin is considered.\n" );
     echo ( "     \e[1m--output=filename \e[0m     Output file in UTF-8. If missing, stdout is considered.\n" );
     echo ( "     \e[1m--br \e[0m                  Adds a <br /> element at the end of each line.\n\n" );
-}
-
-function parseFormatFile($args) {
-    if (is_readable($args->formatFile)) {
-        global $FFRows;
-        $FFRows = array();
-        $handle = fopen($args->formatFile, "r");
-        while (($line = fgets($handle)) == true) {
-            if ($line != "\n") {
-                $line = str_replace("\n", '', $line);
-                array_push($FFRows, $line);
-            }
-        }
-        fclose($handle);
-        foreach ($FFRows as &$row) {
-            $row = preg_split("/[\t]+/", $row);
-        }
-      //  var_dump($FFRows);
-    }
 }
 
 function parseInputFile($args) {
@@ -63,10 +45,31 @@ function parseInputFile($args) {
         error(2, "Input file failure!");
 }
 
+function parseFormatFile($args) {
+    if (is_readable($args->formatFile)) {
+        global $FFRows;
+        $FFRows = array();
+        $handle = fopen($args->formatFile, "r");
+        while (($line = fgets($handle)) == true) {
+            if ($line != "\n") {
+                $line = str_replace("\n", '', $line);
+                array_push($FFRows, $line);
+            }
+        }
+        fclose($handle);
+        foreach ($FFRows as &$row) {
+            $row = preg_split("/[\t]+/", $row);
+        }
+        //  var_dump($FFRows);
+    }
+}
+
 $args = new Arguments($argv);
 $opt = $args->parseArg();
+
 if (!$opt)
     error(1, "Console argument Error!");
+
 if ($args->isHelp)
     printHelp();
 if ($args->isInputFile)
